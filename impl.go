@@ -1,4 +1,4 @@
-package api
+package pocket
 
 import (
 	"github.com/go-resty/resty/v2"
@@ -15,16 +15,16 @@ func (d *DefaultAPI) setup(token string) {
 	})
 }
 
-func New(token string) API {
+func newWithToken(token string) API {
 	d := DefaultAPI{}
 	d.setup(token)
 	return &d
 }
 
-func NewForTest() API {
+func newForTest() API {
 	token := os.Getenv("POCKET_TOKEN")
 	if len(token) == 0 {
 		panic("no token found. set it in $POCKET_TOKEN")
 	}
-	return New(token)
+	return newWithToken(token)
 }
