@@ -52,7 +52,7 @@ func (d *DefaultAPI) LiveList(ownerId string, nextTime int64) ([]LiveItem, int64
 		var extInfo liveExtInfo
 		_ = json.Unmarshal([]byte(it.ExtInfo), &extInfo)
 		ret = append(ret, LiveItem{
-			liveListItem: it,
+			liveListBase: it,
 			liveExtInfo:  extInfo,
 			Time:         time.UnixMilli(it.MsgTime),
 		})

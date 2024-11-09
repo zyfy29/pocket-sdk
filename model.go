@@ -16,6 +16,11 @@ func (r Resp[T]) ErrorFailed() error {
 	return fmt.Errorf("pocket returns %d, due to: %s", r.Status, r.Message)
 }
 
+// 结构体命名规则：
+// XxBase表示借口返回的原始内容，XxDetail表示将扩展信息反序列化后得到的内容
+
+// Live 直播详情
+// deprecated，即将重命名为LiveDetail
 type Live struct {
 	LiveId         string `json:"liveId"`
 	RoomId         string `json:"roomId"`
@@ -47,7 +52,14 @@ type Live struct {
 	SpecialBadge       []interface{} `json:"specialBadge"`
 }
 
-type liveListItem struct {
+type LiveDetail = Live
+
+type liveList struct {
+	Message  []liveListBase `json:"message"`
+	NextTime int64          `json:"nextTime"`
+}
+
+type liveListBase struct {
 	MsgidClient string `json:"msgidClient"`
 	MsgTime     int64  `json:"msgTime"`
 	MsgType     string `json:"msgType"`
@@ -75,15 +87,11 @@ type liveExtInfo struct {
 	} `json:"user"`
 }
 
+// LiveItem 直播列表显示
 type LiveItem struct {
-	liveListItem
+	liveListBase
 	liveExtInfo
 	Time time.Time
-}
-
-type liveList struct {
-	Message  []liveListItem `json:"message"`
-	NextTime int64          `json:"nextTime"`
 }
 
 type voiceOperate struct {
@@ -99,7 +107,22 @@ type voiceUser struct {
 	VoiceStatus bool   `json:"voiceStatus"`
 }
 
+// VoiceStatus 上麦状态
 type VoiceStatus struct {
 	voiceUser
 	StreamUrl string
+}
+
+type RoomMessageContent struct {
+	Messages []MessageBase `json:"message"`
+	NextTime int64         `json:"nextTime"` // 次のリクエストに使用するnextTime
+}
+
+type MessageBase struct {
+	MsgIDServer string `json:"msgIdServer"`
+	MsgIDClient string `json:"msgIdClient"`
+	MsgTime     int64  `json:"msgTime"`
+	MsgType     string `json:"msgType"`
+	Bodys       string `json:"bodys"`
+	ExtInfo     string `json:"extInfo"`
 }
