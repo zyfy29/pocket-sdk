@@ -3,6 +3,7 @@ package pocket
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
@@ -112,6 +113,25 @@ func TestDefaultAPI_Message(t *testing.T) {
 			t.Log(got)
 			t.Log(got1)
 			assert.Greater(t, len(got), 0)
+			for i, mi := range got {
+				customType := mi.GetCustomType()
+				t.Log(i, customType, strings.Repeat("-", 15))
+				switch customType {
+				case CustomTypeText:
+					customMsg := mi.FormatToTextType()
+					t.Log(customMsg.TextContent)
+				case CustomTypeReply:
+					customMsg := mi.FormarToReplyType()
+					t.Log(customMsg.TextContent)
+					t.Log(customMsg.ReplyTo)
+					t.Log(customMsg.ReferenceContent)
+				case CustomTypeMedea:
+					customMsg := mi.FormatToMediaType()
+					t.Log(customMsg.TextContent)
+					t.Log(customMsg.MediaUrl)
+					t.Log(customMsg.MediaExt)
+				}
+			}
 		})
 	}
 }
