@@ -71,5 +71,5 @@ func (d *DefaultAPI) Voice(serverId string, channelId string) (VoiceStatus, erro
 	if len(res.Content.VoiceUserList) == 1 {
 		return VoiceStatus{res.Content.VoiceUserList[0], res.Content.StreamUrl}, nil
 	}
-	return VoiceStatus{}, nil
+	return VoiceStatus{VoiceUser{}, res.Content.StreamUrl}, nil
 }
