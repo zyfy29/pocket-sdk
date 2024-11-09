@@ -98,12 +98,12 @@ type liveList struct {
 	NextTime int64          `json:"nextTime"`
 }
 
-type VoiceOperateContent struct {
-	VoiceUserList []VoiceUser `json:"voiceUserList"`
+type voiceOperate struct {
+	VoiceUserList []voiceUser `json:"voiceUserList"`
 	StreamUrl     string      `json:"streamUrl"`
 }
 
-type VoiceUser struct {
+type voiceUser struct {
 	UserId      int    `json:"userId"`
 	Nickname    string `json:"nickname"`
 	Avatar      string `json:"avatar"`
@@ -112,6 +112,6 @@ type VoiceUser struct {
 }
 
 type VoiceStatus struct {
-	VoiceUser
+	voiceUser
 	StreamUrl string
 }

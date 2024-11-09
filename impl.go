@@ -59,11 +59,11 @@ func (d *DefaultAPI) Voice(serverId string, channelId string) (VoiceStatus, erro
 		ServerId:    serverId,
 		OperateCode: 2,
 	}
-	resp, err := d.Client.R().SetBody(req).SetResult(Resp[VoiceOperateContent]{}).Post(voiceUrl)
+	resp, err := d.Client.R().SetBody(req).SetResult(Resp[voiceOperate]{}).Post(voiceUrl)
 	if err != nil {
 		return VoiceStatus{}, err
 	}
-	res := resp.Result().(*Resp[VoiceOperateContent])
+	res := resp.Result().(*Resp[voiceOperate])
 	if !res.Success {
 		return VoiceStatus{}, res.ErrorFailed()
 	}
@@ -71,5 +71,5 @@ func (d *DefaultAPI) Voice(serverId string, channelId string) (VoiceStatus, erro
 	if len(res.Content.VoiceUserList) == 1 {
 		return VoiceStatus{res.Content.VoiceUserList[0], res.Content.StreamUrl}, nil
 	}
-	return VoiceStatus{VoiceUser{}, res.Content.StreamUrl}, nil
+	return VoiceStatus{voiceUser{}, res.Content.StreamUrl}, nil
 }
