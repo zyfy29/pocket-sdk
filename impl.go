@@ -1,5 +1,10 @@
 package pocket
 
+import (
+	"encoding/json"
+	"time"
+)
+
 const (
 	liveOneUrl  = "https://pocketapi.48.cn/live/api/v1/live/getLiveOne"
 	liveListUrl = "https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/aim/type"
@@ -44,7 +49,13 @@ func (d *DefaultAPI) LiveList(ownerId string, nextTime int64) ([]LiveItem, int64
 
 	var ret []LiveItem
 	for _, it := range res.Content.Message {
-		ret = append(ret, it.FormatToLiveItem())
+		var extInfo liveExtInfo
+		_ = json.Unmarshal([]byte(it.ExtInfo), &extInfo)
+		ret = append(ret, LiveItem{
+			liveListItem: it,
+			liveExtInfo:  extInfo,
+			Time:         time.UnixMilli(it.MsgTime),
+		})
 	}
 	return ret, res.Content.NextTime, nil
 }

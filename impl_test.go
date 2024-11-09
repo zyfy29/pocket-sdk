@@ -28,12 +28,12 @@ func TestDefaultAPI_LiveList(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			"success",
-			args{
+			name: "success",
+			args: args{
 				ownerId:  "63566",
 				nextTime: 0,
 			},
-			assert.NoError,
+			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {

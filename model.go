@@ -1,9 +1,7 @@
 package pocket
 
 import (
-	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
 )
 
@@ -77,20 +75,10 @@ type liveExtInfo struct {
 	} `json:"user"`
 }
 
-func (l liveListItem) FormatToLiveItem() LiveItem {
-	var extInfo liveExtInfo
-	_ = json.Unmarshal([]byte(l.ExtInfo), &extInfo)
-	return LiveItem{
-		ID:    strconv.FormatInt(extInfo.ID, 10),
-		Title: extInfo.Title,
-		Time:  time.UnixMilli(l.MsgTime),
-	}
-}
-
 type LiveItem struct {
-	ID    string    `json:"id"`
-	Title string    `json:"title"`
-	Time  time.Time `json:"liveTime"`
+	liveListItem
+	liveExtInfo
+	Time time.Time
 }
 
 type liveList struct {
