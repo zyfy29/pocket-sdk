@@ -45,7 +45,38 @@ func TestDefaultAPI_LiveList(t *testing.T) {
 			}
 			t.Log(got)
 			t.Log(got1)
-			assert.Greater(t, len(*got), 0)
+			assert.Greater(t, len(got), 0)
+		})
+	}
+}
+
+func TestDefaultAPI_Voice(t *testing.T) {
+	type args struct {
+		serverId  string
+		channelId string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				"1213755",
+				"1360923",
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := newForTest()
+			got, err := d.Voice(tt.args.serverId, tt.args.channelId)
+			if !tt.wantErr(t, err, fmt.Sprintf("Voice(%v, %v)", tt.args.serverId, tt.args.channelId)) {
+				return
+			}
+			t.Log(got)
 		})
 	}
 }

@@ -97,3 +97,21 @@ type liveList struct {
 	Message  []liveListItem `json:"message"`
 	NextTime int64          `json:"nextTime"`
 }
+
+type VoiceOperateContent struct {
+	VoiceUserList []VoiceUser `json:"voiceUserList"`
+	StreamUrl     string      `json:"streamUrl"`
+}
+
+type VoiceUser struct {
+	UserId      int    `json:"userId"`
+	Nickname    string `json:"nickname"`
+	Avatar      string `json:"avatar"`
+	PfUrl       string `json:"pfUrl"`
+	VoiceStatus bool   `json:"voiceStatus"`
+}
+
+type VoiceStatus struct {
+	VoiceUser
+	StreamUrl string
+}
