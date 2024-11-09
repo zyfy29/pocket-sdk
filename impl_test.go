@@ -80,3 +80,38 @@ func TestDefaultAPI_Voice(t *testing.T) {
 		})
 	}
 }
+
+func TestDefaultAPI_Message(t *testing.T) {
+	type args struct {
+		serverId  string
+		channelId string
+		nextTime  int64
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				serverId:  "2197175",
+				channelId: "2720929",
+				nextTime:  0,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := newForTest()
+			got, got1, err := d.Message(tt.args.serverId, tt.args.channelId, tt.args.nextTime)
+			if !tt.wantErr(t, err, fmt.Sprintf("Message(%v, %v, %v)", tt.args.serverId, tt.args.channelId, tt.args.nextTime)) {
+				return
+			}
+			t.Log(got)
+			t.Log(got1)
+			assert.Greater(t, len(got), 0)
+		})
+	}
+}

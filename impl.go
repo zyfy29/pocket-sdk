@@ -9,6 +9,7 @@ const (
 	liveOneUrl  = "https://pocketapi.48.cn/live/api/v1/live/getLiveOne"
 	liveListUrl = "https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/aim/type"
 	voiceUrl    = "https://pocketapi.48.cn/im/api/v1/team/voice/operate"
+	messageUrl  = "https://pocketapi.48.cn/im/api/v1/team/message/list/homeowner"
 )
 
 func (d *DefaultAPI) LiveOne(liveId string) (Live, error) {
@@ -60,7 +61,7 @@ func (d *DefaultAPI) LiveList(ownerId string, nextTime int64) ([]LiveItem, int64
 	return ret, res.Content.NextTime, nil
 }
 
-func (d *DefaultAPI) Voice(serverId string, channelId string) (VoiceStatus, error) {
+func (d *DefaultAPI) Voice(serverId, channelId string) (VoiceStatus, error) {
 	req := struct {
 		ChannelId   string `json:"channelId"`
 		ServerId    string `json:"serverId"`
@@ -83,4 +84,37 @@ func (d *DefaultAPI) Voice(serverId string, channelId string) (VoiceStatus, erro
 		return VoiceStatus{res.Content.VoiceUserList[0], res.Content.StreamUrl}, nil
 	}
 	return VoiceStatus{voiceUser{}, res.Content.StreamUrl}, nil
+}
+
+func (d *DefaultAPI) Message(serverId, channelId string, nextTime int64) ([]MessageItem, int64, error) {
+	req := struct {
+		NextTime  int64  `json:"nextTime"`
+		ServerId  string `json:"serverId"`
+		ChannelId string `json:"channelId"`
+		Limit     int    `json:"limit"` // 100
+	}{
+		ServerId:  serverId,
+		ChannelId: channelId,
+		Limit:     100,
+		NextTime:  nextTime,
+	}
+	resp, err := d.Client.R().SetBody(req).SetResult(Resp[RoomMessageContent]{}).Post(messageUrl)
+	if err != nil {
+		return nil, 0, err
+	}
+	res := resp.Result().(*Resp[RoomMessageContent])
+	if !res.Success {
+		return nil, 0, res.ErrorFailed()
+	}
+
+	var ret []MessageItem
+	for _, it := range res.Content.Messages {
+		var extInfo messageExtInfo
+		_ = json.Unmarshal([]byte(it.ExtInfo), &extInfo)
+		ret = append(ret, MessageItem{
+			messageBase:    it,
+			messageExtInfo: extInfo,
+		})
+	}
+	return ret, res.Content.NextTime, nil
 }
