@@ -2,6 +2,7 @@ package pocket
 
 import (
 	"encoding/json"
+	"github.com/go-resty/resty/v2"
 	"time"
 )
 
@@ -12,11 +13,16 @@ const (
 	messageUrl  = "https://pocketapi.48.cn/im/api/v1/team/message/list/homeowner"
 )
 
+func (d *DefaultAPI) getR() *resty.Request {
+	time.Sleep(d.Interval * time.Millisecond)
+	return d.Client.R()
+}
+
 func (d *DefaultAPI) LiveOne(liveId string) (Live, error) {
 	req := struct {
 		LiveId string `json:"liveId"`
 	}{liveId}
-	resp, err := d.Client.R().SetBody(req).SetResult(Resp[Live]{}).Post(liveOneUrl)
+	resp, err := d.getR().SetBody(req).SetResult(Resp[Live]{}).Post(liveOneUrl)
 	if err != nil {
 		return Live{}, err
 	}
@@ -39,7 +45,7 @@ func (d *DefaultAPI) LiveList(ownerId string, nextTime int64) ([]LiveItem, int64
 		OwnerId:    ownerId,
 		NextTime:   nextTime,
 	}
-	resp, err := d.Client.R().SetBody(req).SetResult(Resp[liveList]{}).Post(liveListUrl)
+	resp, err := d.getR().SetBody(req).SetResult(Resp[liveList]{}).Post(liveListUrl)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -71,7 +77,7 @@ func (d *DefaultAPI) Voice(serverId, channelId string) (VoiceStatus, error) {
 		ServerId:    serverId,
 		OperateCode: 2,
 	}
-	resp, err := d.Client.R().SetBody(req).SetResult(Resp[voiceOperate]{}).Post(voiceUrl)
+	resp, err := d.getR().SetBody(req).SetResult(Resp[voiceOperate]{}).Post(voiceUrl)
 	if err != nil {
 		return VoiceStatus{}, err
 	}
@@ -98,7 +104,7 @@ func (d *DefaultAPI) Message(serverId, channelId string, nextTime int64) ([]Mess
 		Limit:     100,
 		NextTime:  nextTime,
 	}
-	resp, err := d.Client.R().SetBody(req).SetResult(Resp[RoomMessageContent]{}).Post(messageUrl)
+	resp, err := d.getR().SetBody(req).SetResult(Resp[RoomMessageContent]{}).Post(messageUrl)
 	if err != nil {
 		return nil, 0, err
 	}

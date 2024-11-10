@@ -3,16 +3,19 @@ package pocket
 import (
 	"github.com/go-resty/resty/v2"
 	"os"
+	"time"
 )
 
 type DefaultAPI struct {
-	Client *resty.Client
+	Client   *resty.Client
+	Interval time.Duration
 }
 
 func (d *DefaultAPI) setup(token string) {
 	d.Client = resty.New().SetHeaders(map[string]string{
 		"token": token,
 	})
+	d.Interval = 500
 }
 
 func newWithToken(token string) API {
