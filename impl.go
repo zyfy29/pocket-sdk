@@ -118,7 +118,7 @@ func (d *DefaultAPI) Message(serverId, channelId string, nextTime int64) ([]Mess
 		var extInfo messageExtInfo
 		_ = json.Unmarshal([]byte(it.ExtInfo), &extInfo)
 		ret = append(ret, MessageItem{
-			messageBase:    it,
+			MessageBase:    it,
 			messageExtInfo: extInfo,
 		})
 	}

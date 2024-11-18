@@ -24,11 +24,11 @@ const (
 )
 
 type RoomMessageContent struct {
-	Messages []messageBase `json:"message"`
+	Messages []MessageBase `json:"message"`
 	NextTime int64         `json:"nextTime"`
 }
 
-type messageBase struct {
+type MessageBase struct {
 	MsgIDServer string `json:"msgIdServer"`
 	MsgIDClient string `json:"msgIdClient"`
 	MsgTime     int64  `json:"msgTime"`
@@ -37,7 +37,7 @@ type messageBase struct {
 	ExtInfo     string `json:"extInfo"`
 }
 
-// for messageBase.ExtInfo
+// for MessageBase.ExtInfo
 type messageExtInfo struct {
 	Module      string `json:"module"`
 	ChannelRole string `json:"channelRole"`
@@ -56,11 +56,11 @@ type messageExtInfo struct {
 
 // MessageItem 只翻译了ext部分
 type MessageItem struct {
-	messageBase
+	MessageBase
 	messageExtInfo
 }
 
-// for messageBase.Bodys
+// for MessageBase.Bodys
 
 type replyBody struct {
 	ReplyInfo struct {
